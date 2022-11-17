@@ -28,16 +28,19 @@ namespace Lab1
 
             //Initialize app secrets
             var configuration = app.Services.GetService<IConfiguration>();
-
-            AppSecrets secrets = configuration.GetSection("Secrets").Get<AppSecrets>();
-            DbInitializer.appSecrets = secrets;
             var hosting = app.Services.GetService<IWebHostEnvironment>();
-/*
+
             if (hosting.IsDevelopment())
             {
                 var secrets = configuration.GetSection("Secrets").Get<AppSecrets>();
-                DbInitializer.appSecrets = secrets;
-            }*/
+                DbInitializer.appSecrets = new AppSecrets(secrets.ManagerPassword, secrets.PlayerPassword);
+            }
+            else
+            {
+                var ManagerPassword =  Environment.GetEnvironmentVariable("managerpassword");
+                var PlayerPassword =  Environment.GetEnvironmentVariable("playerpassword");
+                DbInitializer.appSecrets = new AppSecrets(ManagerPassword, PlayerPassword);
+            }
 
             using (var scope = app.Services.CreateScope())
             {
