@@ -19,10 +19,13 @@ namespace Lab1.Controllers
     public class PlayersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<PlayersController> _logger;
 
-        public PlayersController(ApplicationDbContext context)
+
+        public PlayersController(ApplicationDbContext context, ILogger<PlayersController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Players
@@ -53,6 +56,7 @@ namespace Lab1.Controllers
         [Authorize(Roles = "Manager")] //Allow Manager only
         public IActionResult Create()
         {
+            ViewData["TeamId"] = new SelectList(_context.Team, "TeamName", "TeamName"); //added dropdown list
             return View();
         }
 
@@ -70,6 +74,7 @@ namespace Lab1.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["TeamId"] = new SelectList(_context.Team, "TeamName", "TeamName"); //added dropdown list
             return View(player);
         }
 
@@ -87,6 +92,7 @@ namespace Lab1.Controllers
             {
                 return NotFound();
             }
+            ViewData["TeamId"] = new SelectList(_context.Team, "TeamName", "TeamName", player.TeamName); //added dropdown list
             return View(player);
         }
 
@@ -123,6 +129,7 @@ namespace Lab1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["TeamId"] = new SelectList(_context.Team, "TeamName", "TeamName", player.TeamName); //added dropdown list
             return View(player);
         }
 
@@ -162,6 +169,9 @@ namespace Lab1.Controllers
             }
             
             await _context.SaveChangesAsync();
+            string logMsg = $"User {User.Identity.Name} team delete confirmed for id : {id}"; //added logging here
+            _logger.LogInformation(logMsg);
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -47,6 +47,23 @@ namespace Lab1
                 DbInitializer.SeedUsersAndRoles(scope.ServiceProvider).Wait();
             }
 
+
+            /// zap fixed
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                context.Response.Headers.Add("X-Xss-Protection", "1");
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                await next();
+            });
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always
+            });
+            ///
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -59,8 +76,12 @@ namespace Lab1
                 app.UseHsts();
             }
 
+            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}"); //custom error page
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+           
+
 
             app.UseRouting();
 
