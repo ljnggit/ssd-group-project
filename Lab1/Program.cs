@@ -23,12 +23,20 @@ namespace Lab1
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddAntiforgery(options =>
+            {
+                options.SuppressXFrameOptionsHeader = true;
+            });
 
             var app = builder.Build();
+            app.UseMiddleware(typeof(CustomResponseHeaderMiddleware));
+
 
             //Initialize app secrets
             var configuration = app.Services.GetService<IConfiguration>();
             var hosting = app.Services.GetService<IWebHostEnvironment>();
+
+           
 
             if (hosting.IsDevelopment())
             {
@@ -48,21 +56,12 @@ namespace Lab1
             }
 
 
-            /// zap fixed
-            app.Use(async (context, next) =>
-            {
-                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
-                context.Response.Headers.Add("X-Xss-Protection", "1");
-                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-                await next();
-            });
 
-            app.UseCookiePolicy(new CookiePolicyOptions
-            {
-                HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
-                Secure = CookieSecurePolicy.Always
-            });
-            ///
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.MapRazorPages();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -80,7 +79,13 @@ namespace Lab1
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-           
+
+          /*  app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always
+            });
+*/
 
 
             app.UseRouting();
@@ -88,10 +93,9 @@ namespace Lab1
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
+
+
+
 
             app.Run();
         }
