@@ -78,7 +78,9 @@ namespace Lab1.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
-            [RegularExpression(@"^([\w-.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$", ErrorMessage = "Invalid Domain.")]
+
+            [RegularExpression("[a-zA-Z0-9\\.]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,6}", ErrorMessage = "The Email field is not a valid e-mail address.")]
+           // [RegularExpression("^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$", ErrorMessage = "The Email field is not a valid e-mail address.")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 

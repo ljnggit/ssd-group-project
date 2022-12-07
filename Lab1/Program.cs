@@ -1,7 +1,9 @@
 using Lab1.Data;
 using Lab1.Models;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using tryLab1.Data;
 
 namespace Lab1
@@ -78,15 +80,21 @@ namespace Lab1
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}"); //custom error page
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            /*
 
+                        app.UseStaticFiles(new StaticFileOptions
+                        {
+                            ServeUnknownFileTypes = true,
+                            DefaultContentType = "text/plain"
+                        });
+            */
 
-          /*  app.UseCookiePolicy(new CookiePolicyOptions
+/*            app.UseCookiePolicy(new CookiePolicyOptions
             {
-                HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
-                Secure = CookieSecurePolicy.Always
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always,
             });
 */
-
 
             app.UseRouting();
 

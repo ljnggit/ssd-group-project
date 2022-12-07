@@ -57,6 +57,9 @@ namespace Lab1.Controllers
         public IActionResult Create()
         {
             ViewData["TeamId"] = new SelectList(_context.Team, "TeamName", "TeamName"); //added dropdown list
+
+            string logMsg = $"User {User.Identity.Name} created a player record";
+            _logger.LogInformation(logMsg);
             return View();
         }
 
@@ -75,6 +78,9 @@ namespace Lab1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TeamId"] = new SelectList(_context.Team, "TeamName", "TeamName"); //added dropdown list
+
+            string logMsg = $"User {User.Identity.Name} created a player record";
+            _logger.LogInformation(logMsg);
             return View(player);
         }
 
@@ -93,6 +99,10 @@ namespace Lab1.Controllers
                 return NotFound();
             }
             ViewData["TeamId"] = new SelectList(_context.Team, "TeamName", "TeamName", player.TeamName); //added dropdown list
+
+            string logMsg = $"User {User.Identity.Name} player edit for id : {id}";
+            _logger.LogInformation(logMsg);
+
             return View(player);
         }
 
@@ -130,6 +140,9 @@ namespace Lab1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TeamId"] = new SelectList(_context.Team, "TeamName", "TeamName", player.TeamName); //added dropdown list
+
+            string logMsg = $"User {User.Identity.Name} player edit for id : {id}";
+            _logger.LogInformation(logMsg);
             return View(player);
         }
 
@@ -149,6 +162,8 @@ namespace Lab1.Controllers
                 return NotFound();
             }
 
+            string logMsg = $"User {User.Identity.Name} player delete for id : {id}";
+            _logger.LogInformation(logMsg);
             return View(player);
         }
 
@@ -169,7 +184,7 @@ namespace Lab1.Controllers
             }
             
             await _context.SaveChangesAsync();
-            string logMsg = $"User {User.Identity.Name} team delete confirmed for id : {id}"; //added logging here
+            string logMsg = $"User {User.Identity.Name} player delete for id : {id}";
             _logger.LogInformation(logMsg);
 
             return RedirectToAction(nameof(Index));

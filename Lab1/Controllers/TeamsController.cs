@@ -18,10 +18,13 @@ namespace Lab1.Controllers
     public class TeamsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<TeamsController> _logger;
 
-        public TeamsController(ApplicationDbContext context)
+
+        public TeamsController(ApplicationDbContext context, ILogger<TeamsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Teams
@@ -52,6 +55,8 @@ namespace Lab1.Controllers
         // GET: Teams/Create
         public IActionResult Create()
         {
+            string logMsg = $"User {User.Identity.Name} created a team";
+            _logger.LogInformation(logMsg);
             return View();
         }
 
@@ -69,6 +74,8 @@ namespace Lab1.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            string logMsg = $"User {User.Identity.Name} team created: {team}";
+            _logger.LogInformation(logMsg);
             return View(team);
         }
 
@@ -86,6 +93,8 @@ namespace Lab1.Controllers
             {
                 return NotFound();
             }
+            string logMsg = $"User {User.Identity.Name} team edit for id : {id}";
+            _logger.LogInformation(logMsg);
             return View(team);
         }
 
@@ -122,6 +131,8 @@ namespace Lab1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            string logMsg = $"User {User.Identity.Name} team edit for id : {id}";
+            _logger.LogInformation(logMsg);
             return View(team);
         }
 
@@ -140,7 +151,8 @@ namespace Lab1.Controllers
             {
                 return NotFound();
             }
-
+            string logMsg = $"User {User.Identity.Name} team delete for id : {id}";
+            _logger.LogInformation(logMsg);
             return View(team);
         }
 
@@ -161,6 +173,10 @@ namespace Lab1.Controllers
             }
             
             await _context.SaveChangesAsync();
+
+            string logMsg = $"User {User.Identity.Name} team delete confirmed for id : {id}";
+            _logger.LogInformation(logMsg);
+
             return RedirectToAction(nameof(Index));
         }
 

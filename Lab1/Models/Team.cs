@@ -14,6 +14,7 @@ namespace Lab1.Models
         public string TeamName { get; set; }
 
         [Required]
+        [RegularExpression("[a-zA-Z0-9\\.]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,6}", ErrorMessage = "The Email field is not a valid e-mail address.")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
